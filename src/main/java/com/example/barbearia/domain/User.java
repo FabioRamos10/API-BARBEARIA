@@ -1,12 +1,13 @@
 package com.example.barbearia.domain;
 
-import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.UUID;
 
-@Entity
-@Table(name = "users")
+@Document(collection = "users")
 @Getter
 @Setter
 @NoArgsConstructor
@@ -15,23 +16,17 @@ import java.util.UUID;
 public class User {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    @Column(nullable = false)
     private String nome;
 
-    @Column(nullable = false, unique = true)
+    @Indexed(unique = true)
     private String email;
 
-    @Column(nullable = false)
     private String senha;
 
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
     private Role role;
 
     @Builder.Default
-    @Column(nullable = false)
     private Boolean ativo = true;
 }

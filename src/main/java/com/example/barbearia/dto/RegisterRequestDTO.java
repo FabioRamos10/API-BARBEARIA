@@ -9,5 +9,6 @@ public record RegisterRequestDTO(
         @NotBlank String nome,
         @Email @NotBlank String email,
         @NotBlank String senha,
-        @NotNull Role role
+        @NotNull Role role,
+        String telefone
 ) {}

@@ -1,8 +1,10 @@
 package com.example.barbearia.controller;
 
+import com.example.barbearia.dto.ForgotPasswordRequestDTO;
 import com.example.barbearia.dto.LoginRequestDTO;
 import com.example.barbearia.dto.LoginResponseDTO;
 import com.example.barbearia.dto.RegisterRequestDTO;
+import com.example.barbearia.dto.ResetPasswordRequestDTO;
 import com.example.barbearia.service.AuthService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -26,5 +28,17 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<LoginResponseDTO> login(@RequestBody @Valid LoginRequestDTO dto) {
         return ResponseEntity.ok(authService.login(dto));
+    }
+
+    @PostMapping("/forgot-password")
+    public ResponseEntity<Void> forgotPassword(@RequestBody @Valid ForgotPasswordRequestDTO dto) {
+        authService.solicitarRecuperacaoSenha(dto);
+        return ResponseEntity.accepted().build();
+    }
+
+    @PostMapping("/reset-password")
+    public ResponseEntity<Void> resetPassword(@RequestBody @Valid ResetPasswordRequestDTO dto) {
+        authService.redefinirSenha(dto);
+        return ResponseEntity.noContent().build();
     }
 }

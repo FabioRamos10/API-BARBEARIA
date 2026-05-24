@@ -1,34 +1,30 @@
 package com.example.barbearia.service;
 
 import com.example.barbearia.domain.User;
-import com.example.barbearia.dto.UserCreateDTO;
 import com.example.barbearia.exception.ApiException;
 import com.example.barbearia.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
 public class UserService {
 
     private final UserRepository userRepository;
-    private final BCryptPasswordEncoder passwordEncoder;
 
-    public User create(UserCreateDTO dto) {
+    @Transactional(readOnly = true)
+    public User requireByEmail(String email) {
+        return userRepository.findByEmail(email)
+                .orElseThrow(() -> new ApiException("Usuário não encontrado", HttpStatus.NOT_FOUND));
+    }
 
-        if (userRepository.existsByEmail(dto.email())) {
-            throw new ApiException("E-mail já cadastrado");
-        }
-
-        User user = User.builder()
-                .nome(dto.nome())
-                .email(dto.email())
-                .senha(passwordEncoder.encode(dto.senha()))
-                .role(dto.role())
-                .ativo(true)
-                .build();
-
-        return userRepository.save(user);
+    @Transactional(readOnly = true)
+    public User requireById(UUID id) {
+        return userRepository.findById(id)
+                .orElseThrow(() -> new ApiException("Usuário não encontrado", HttpStatus.NOT_FOUND));
     }
 }
